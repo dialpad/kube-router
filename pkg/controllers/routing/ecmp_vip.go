@@ -110,6 +110,22 @@ func (nrc *NetworkRoutingController) tryHandleServiceUpdate(obj interface{}, log
 	}
 }
 
+func (nrc *NetworkRoutingController) tryHandleServiceDelete(obj interface{}, logMsgFormat string) {
+	svc, ok := obj.(*v1core.Service)
+	if !ok {
+		tombstone, ok := obj.(cache.DeletedFinalStateUnknown)
+		if !ok {
+			glog.Errorf("unexpected object type: %v", obj)
+			return
+		}
+		if svc, ok = tombstone.Obj.(*v1core.Service); !ok {
+			glog.Errorf("unexpected object type: %v", obj)
+			return
+		}
+	}
+	nrc.handleServiceDelete(svc)
+}
+
 // OnServiceCreate handles new service create event from the kubernetes API server
 func (nrc *NetworkRoutingController) OnServiceCreate(obj interface{}) {
 	nrc.tryHandleServiceUpdate(obj, "Received new service: %s/%s from watch API")

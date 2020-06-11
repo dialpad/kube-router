@@ -151,6 +151,12 @@ func (kr *KubeRouter) Run() error {
 		}
 	}
 
+	if kr.Config.BGPGracefulPeerRestartTime {
+		if kr.Config.BGPGracefulPeerRestartTime <= 0 {
+			return errors.New("BGPGracefulPeerRestartTime must be positive")
+		}
+	}
+
 	if kr.Config.RunRouter {
 		nrc, err := routing.NewNetworkRoutingController(kr.Client, kr.Config, nodeInformer, svcInformer, epInformer)
 		if err != nil {

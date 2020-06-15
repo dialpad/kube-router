@@ -149,6 +149,10 @@ func (kr *KubeRouter) Run() error {
 		if kr.Config.BGPGracefulRestartDeferralTime <= 0 {
 			return errors.New("BGPGracefuleRestartDeferralTime must be positive")
 		}
+
+		if kr.Config.BGPGracefulPeerRestartTime <= 0 {
+			return errors.New("BGPGracefulPeerRestartTime must be positive")
+		}
 	}
 
 	if kr.Config.RunRouter {

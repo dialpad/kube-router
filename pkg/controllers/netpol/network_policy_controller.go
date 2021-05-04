@@ -438,10 +438,16 @@ func (npc *NetworkPolicyController) processIngressRules(policy networkPolicyInfo
 			for _, portProtocol := range ingressRule.ports {
 				comment := "rule to ACCEPT traffic from all sources to dest pods selected by policy name: " +
 					policy.name + " namespace " + policy.namespace
-				if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, portProtocol.port); err != nil {
-					return err
+				if portProtocol.port != "16384" {
+					if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, portProtocol.port); err != nil {
+						return err
+					}
 				}
-			}
+				else {
+					// TODO(ssankaridurg): TEL-13955: Super-nasty hack to provide support for port-range temporarily, until Kube-router fixes it properly
+					if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, "16384:32768"); err != nil {
+						return err
+				}
 
 			for j, endPoints := range ingressRule.namedPorts {
 				namedPortIpSetName := policyIndexedIngressNamedPortIpSetName(policy.namespace, policy.name, i, j)

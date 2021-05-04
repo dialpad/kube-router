@@ -447,7 +447,9 @@ func (npc *NetworkPolicyController) processIngressRules(policy networkPolicyInfo
 					// TODO(ssankaridurg): TEL-13955: Super-nasty hack to provide support for port-range temporarily, until Kube-router fixes it properly
 					if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, "16384:32768"); err != nil {
 						return err
+					}
 				}
+			}
 
 			for j, endPoints := range ingressRule.namedPorts {
 				namedPortIpSetName := policyIndexedIngressNamedPortIpSetName(policy.namespace, policy.name, i, j)

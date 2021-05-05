@@ -442,8 +442,7 @@ func (npc *NetworkPolicyController) processIngressRules(policy networkPolicyInfo
 					if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, portProtocol.port); err != nil {
 						return err
 					}
-				}
-				else {
+				} else {
 					// TODO(ssankaridurg): TEL-13955: Super-nasty hack to provide support for port-range temporarily, until Kube-router fixes it properly
 					if err := npc.appendRuleToPolicyChain(iptablesCmdHandler, policyChainName, comment, "", targetDestPodIpSetName, portProtocol.protocol, "16384:32768"); err != nil {
 						return err

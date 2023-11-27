@@ -810,7 +810,8 @@ func (npc *NetworkPolicyController) syncPodFirewallChains(version string) (map[s
 
 		// add default DROP rule at the end of chain
 		comment = "default rule to REJECT traffic destined for POD name:" + pod.name + " namespace: " + pod.namespace
-		args = []string{"-m", "comment", "--comment", comment, "-j", "REJECT"}
+		// args = []string{"-m", "comment", "--comment", comment, "-j", "REJECT"}
+		args = []string{"-m", "comment", "--comment", comment, "-j", "LOG_DROP"}
 		err = iptablesCmdHandler.AppendUnique("filter", podFwChainName, args...)
 		if err != nil {
 			return nil, fmt.Errorf("Failed to run iptables command: %s", err.Error())

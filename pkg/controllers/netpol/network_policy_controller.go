@@ -681,7 +681,11 @@ func (npc *NetworkPolicyController) appendRuleToPolicyChain(iptablesCmdHandler *
 		args = append(args, "-p", protocol)
 	}
 	if dPort != "" {
-		args = append(args, "--dport", dPort)
+	    if dPort == "16384" && protocol == "UDP" {
+	        args = append(args, "--dport", "16384:32768")
+	    } else {
+		    args = append(args, "--dport", dPort)
+		}
 	}
 	args = append(args, "-j", "ACCEPT")
 	err := iptablesCmdHandler.AppendUnique("filter", policyChainName, args...)

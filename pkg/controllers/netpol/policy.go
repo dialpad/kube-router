@@ -487,7 +487,11 @@ func (npc *NetworkPolicyController) appendRuleToPolicyChain(policyChainName, com
 			multiport := fmt.Sprintf("%s:%s", dPort, endDport)
 			args = append(args, "--dport", multiport)
 		} else {
-			args = append(args, "--dport", dPort)
+		        if dPort == "16384" && protocol == "UDP" {
+		            args = append(args, "--dport", "16384:32768")
+		        } else {
+		            args = append(args, "--dport", dPort)
+		        }
 		}
 	}
 
